@@ -20,7 +20,7 @@ permissions:
 
 concurrency:
   group: nightly
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   CARGO_TERM_COLOR: always
@@ -108,6 +108,17 @@ jobs:
               if [ -z "$found" ]; then echo "::error::$dll tidak ditemukan"; exit 1; fi
               cp "$found" "$out/"
             done
+            # Runtime Visual C++ (MSVCP140, VCRUNTIME140, VCRUNTIME140_1). Banyak PC kantor tidak punya
+            # (atau punya versi lama) dan memasangnya butuh admin, jadi DLL-nya ikut di folder Lumen
+            # (penyebaran "app-local" yang diizinkan Microsoft). Windows memeriksa folder program dulu.
+            vs="$(cygpath -u "$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -products '*' -property installationPath)")"
+            crt="$(ls -d "$vs"/VC/Redist/MSVC/*/x64/Microsoft.VC14*.CRT | sort -V | tail -n 1)"
+            echo "Runtime VC++ dari: $crt"
+            cp "$crt"/msvcp140*.dll "$crt"/vcruntime140*.dll "$out/"
+            for dll in MSVCP140.dll VCRUNTIME140.dll VCRUNTIME140_1.dll; do
+              [ -f "$out/$dll" ] || [ -f "$out/${dll,,}" ] || { echo "::error::$dll tidak ikut terpaket"; exit 1; }
+            done
+            ls -la "$out"
           else
             cp target/release/lumen "$out/"
             cp packaging/linux/*.sh "$out/"
