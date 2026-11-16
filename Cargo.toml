@@ -1,0 +1,62 @@
+[package]
+name = "lumen"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+description = "Lumen Nightly - browser portabel ringan berbasis mesin Servo, UI Rust"
+license = "MPL-2.0"
+
+[dependencies]
+# Mesin render. Dipatok ke versi tepat karena API embedding Servo masih berubah tiap rilis.
+servo = { version = "=0.8.0", default-features = false, features = [
+    "bundled",                  # resource + freetype dibundel (portabel, tanpa file eksternal)
+    "clipboard",
+    "js_jit",
+    "webgl",
+    "subtlecrypto",
+    "brotli-compression-stream",
+] }
+
+# UI browser (toolbar + tab). Versi dipilih agar cocok dengan winit 0.30 dan glow 0.17 milik Servo.
+winit = "0.30.13"
+egui = { version = "0.37", features = ["default_fonts"] }
+egui-winit = { version = "0.37", default-features = false, features = ["clipboard", "links"] }
+egui_glow = "0.37"
+glow = "0.17"
+
+url = "2"
+# Mesin pemblokir iklan Brave Shields (format EasyList/uBlock). Resolver domain bawaannya
+# dibutuhkan untuk aturan $third-party dan $domain=.
+adblock = "0.13"
+euclid = "0.22"
+rustls = { version = "0.23", default-features = false, features = ["std", "tls12", "aws_lc_rs"] }
+log = "0.4"
+
+# epaint 0.37 lupa memanggil `flush()` sebelum `render()` pada vello_cpu. Tidak masalah selama
+# vello_cpu berjalan satu thread, tetapi Servo menyalakan mode multithreading-nya sehingga UI
+# panik saat menggambar teks. Salinan di vendor/epaint hanya menambahkan dua panggilan `flush()`.
+[patch.crates-io]
+epaint = { path = "vendor/epaint" }
+
+[features]
+default = []
+# Proses konten terpisah per situs (lebih aman/stabil, tapi lebih boros RAM).
+multiprocess = ["servo/multiprocess"]
+# Render lewat ANGLE (Direct3D). Lebih kompatibel di Windows dengan driver GPU lama/generik.
+angle = ["servo/no-wgl"]
+
+# Build pengembangan: tanpa debuginfo (Servo + debuginfo penuh butuh >20 GB disk dan RAM besar
+# saat linking) dan sedikit optimasi supaya halaman masih enak dicoba.
+[profile.dev]
+debug = false
+opt-level = 1
+debug-assertions = false
+overflow-checks = false
+incremental = false
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = "symbols"
+panic = "unwind"   # Servo memakai catch_unwind; jangan ganti ke abort
