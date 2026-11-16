@@ -68,6 +68,10 @@ jobs:
             libx11-dev libxcb1-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxcb-shm0-dev \
             libxkbcommon-dev libwayland-dev libegl1-mesa-dev libgl1-mesa-dev \
             libfontconfig1-dev libfreetype-dev libunwind-dev libdbus-1-dev libudev-dev libssl-dev
+          # Runner Ubuntu 22.04 punya beberapa versi LLVM. Tanpa ini bindgen (mozangle) bisa memuat
+          # libclang versi lain dari header clang 14 dan gagal dengan "undeclared identifier __builtin_ia32_*".
+          echo "LIBCLANG_PATH=/usr/lib/llvm-14/lib" >> "$GITHUB_ENV"
+          echo "CLANG_PATH=/usr/bin/clang-14" >> "$GITHUB_ENV"
 
       - name: Dependensi build (Windows)
         if: runner.os == 'Windows'
