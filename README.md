@@ -1,10 +1,5 @@
 # Lumen Nightly
 
-> **Mencari browser untuk dipakai sehari-hari?** Pakai **[Ovner](ovner/README.md)** (folder `ovner/`):
-> browser WebView2 + pemblokir iklan Brave, dipasang tanpa admin dengan ikon di Start Menu dan
-> Desktop. Unduh `Ovner-Setup.exe` di [Releases](https://github.com/profrendi/ovner/releases/latest).
-> Lumen (di bawah) adalah browser eksperimen berbasis mesin Servo.
-
 Browser portabel yang ringan, ditulis dengan Rust di atas mesin [Servo](https://servo.org/).
 Pengaturan privasinya mengikuti gaya LibreWolf dan Brave: ketat sejak pertama dibuka, tanpa telemetry.
 
