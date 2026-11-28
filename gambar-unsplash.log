@@ -1,0 +1,7 @@
+[2026-11-28T02:36:59Z INFO  lumen::privacy] Filter iklan disusun dari 5 daftar (90.255954ms)
+[2026-11-28T02:36:59Z INFO  lumen::app] Diblokir: [script] https://securepubads.g.doubleclick.net/tag/js/gpt.js
+[2026-11-28T02:36:59Z INFO  lumen::app] Diblokir: [script] https://securepubads.g.doubleclick.net/tag/js/gpt.js
+[2026-11-28T02:37:00Z INFO  lumen::app] Diblokir: [xmlhttprequest] https://collector.unsplash.com/com.snowplowanalytics.snowplow/tp2
+[2026-11-28T02:37:00Z INFO  lumen::app] Diblokir: [script] https://cdn.speedcurve.com/js/lux.es2020.js?id=140493345
+[2026-11-28T02:37:01Z INFO  lumen::app] Diblokir: [image] https://track.activemetering.com/pixel/v1/all/pixel.gif?cid=f831cb88-976a-4e81-b922-0e7f24b8055c
+[2026-11-28T02:37:01Z INFO  lumen::app] Diblokir: [xmlhttprequest] https://collector.unsplash.com/com.snowplowanalytics.snowplow/tp2
